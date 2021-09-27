@@ -5,13 +5,13 @@ public class MagicSquare {
     private int[][] arr = null;
 
     //Constructor
-    MagicSquare(int s) {
-        arr = new int[s][s]; //Create new array size x size
+    MagicSquare(int size) {
+        arr = new int[size][size]; //Create new array size x size
         makeArrayZero();
     }
 
     //Set all array integers to zero
-    public void makeArrayZero() {
+    private void makeArrayZero() {
         int size = arr.length;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -82,16 +82,16 @@ public class MagicSquare {
     //Used by createSinglyEvenMagicSquare
     private void odd(int[][] magic, int startNum){
 
-        int N = magic.length;
-        int row = N-1;
-        int col = N/2;
+        int size = magic.length;
+        int row = size-1;
+        int col = size/2;
         magic[row][col] = startNum;
-        for(int i = 2; i<=N*N; i++){
-            if(magic[(row+1)%N][(col+1)%N]== 0){
-                row = (row+1)%N;
-                col = (col+1)%N;
+        for(int i = 2; i<=size*size; i++){
+            if(magic[(row+1)%size][(col+1)%size]== 0){
+                row = (row+1)%size;
+                col = (col+1)%size;
             }else{
-                row = (row-1+N)%N;
+                row = (row-1+size)%size;
             }
             magic[row][col] = i+startNum-1;
         }
