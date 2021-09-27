@@ -1,3 +1,7 @@
+// Pratham Juvekar
+// APCS Block E
+// 9/10/2021
+// Fraction Calculator
 
 public class Fraction {
 

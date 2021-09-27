@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MagicSquare:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MagicSquare_jar</output-path>
+    <root id="archive" name="MagicSquare.jar">
+      <element id="module-output" name="MagicSquare" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../BreezySwing/BreezySwing.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

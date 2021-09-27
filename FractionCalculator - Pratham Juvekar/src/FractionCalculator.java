@@ -1,3 +1,8 @@
+// Pratham Juvekar
+// APCS Block E
+// 9/10/2021
+// Fraction Calculator
+
 public class FractionCalculator {
 
     public String add (int num1, int den1, int num2, int den2) {
