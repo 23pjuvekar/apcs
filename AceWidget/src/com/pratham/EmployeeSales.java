@@ -2,9 +2,9 @@ package com.pratham;
 
 public class EmployeeSales {
 
-    final int MAX_EMPLOYEES = 10;                        // maximum number of employees
-    Employee[] employees = new Employee[MAX_EMPLOYEES];  // array to store employees
-    int employeeCount = 0;                               // count of employees stored
+    private final int MAX_EMPLOYEES = 10;                        // maximum number of employees
+    private Employee[] employees = new Employee[MAX_EMPLOYEES];  // array to store employees
+    private int employeeCount = 0;                               // count of employees stored
 
     public int getEmployeeCount() {
         return employeeCount;
@@ -42,6 +42,9 @@ public class EmployeeSales {
     }
 
     public double getHighestTotalSales() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
         double highest = -1;
         for (int i=0; i<employeeCount; i++) {
             if ( employees[i].getTotalSales() > highest ) {
@@ -52,6 +55,9 @@ public class EmployeeSales {
     }
 
     public int getHighestTotalSalesCount() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
         double highest = getHighestTotalSales();
         int count = 0;
         for (int i=0; i<employeeCount; i++) {
@@ -63,6 +69,9 @@ public class EmployeeSales {
     }
 
     public double getHighestQuarterSales() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
         double highest = -1;
         for (int i=0; i<employeeCount; i++) {
             if ( employees[i].getQ1Sales() > highest ) {
@@ -82,6 +91,9 @@ public class EmployeeSales {
     }
 
     public int getHighestQuarterSalesCount() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
         double highest = getHighestQuarterSales();
         int count = 0;
         for (int i=0; i<employeeCount; i++) {
@@ -96,6 +108,9 @@ public class EmployeeSales {
     }
 
     public double getLowestTotalSales() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
         double lowest = 999999999;
         for (int i=0; i<employeeCount; i++) {
             if ( employees[i].getTotalSales() < lowest ) {
@@ -106,6 +121,9 @@ public class EmployeeSales {
     }
 
     public int getLowestTotalSalesCount() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
         double lowest = getLowestTotalSales();
         int count = 0;
         for (int i=0; i<employeeCount; i++) {
@@ -117,6 +135,9 @@ public class EmployeeSales {
     }
 
     public double getLowestQuarterSales() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
         double lowest = 999999999;
         for (int i=0; i<employeeCount; i++) {
             if ( employees[i].getQ1Sales() < lowest ) {
@@ -136,6 +157,9 @@ public class EmployeeSales {
     }
 
     public int getLowestQuarterSalesCount() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
         double lowest = getLowestQuarterSales();
         int count = 0;
         for (int i=0; i<employeeCount; i++) {
@@ -149,4 +173,53 @@ public class EmployeeSales {
         return count;
     }
 
+    public double getMeanTotalSales() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
+        double sum = 0;
+        for (int i=0; i<employeeCount; i++) {
+            sum += employees[i].getTotalSales();
+        }
+        return sum/employeeCount;
+    }
+
+    public double getMeanQuarterSales() {
+        if ( employeeCount == 0 ) {
+            return 0;
+        }
+        double sum = 0;
+        for (int i=0; i<employeeCount; i++) {
+            sum += (employees[i].getQ1Sales() + employees[i].getQ2Sales() +
+                    employees[i].getQ3Sales() + employees[i].getQ4Sales());
+        }
+        return sum/employeeCount/4;
+    }
+
+    public double getStdDevTotalSales() {
+        if (employeeCount == 0) {
+            return 0;
+        }
+        double mean = getMeanTotalSales();
+        double sumSquared = 0;
+        for (int i = 0; i < employeeCount; i++) {
+            sumSquared += (mean - employees[i].getTotalSales())*(mean - employees[i].getTotalSales());
+        }
+        return Math.sqrt(sumSquared/employeeCount);
+    }
+
+    public double getStdDevQuarterSales() {
+        if (employeeCount == 0) {
+            return 0;
+        }
+        double mean = getMeanQuarterSales();
+        double sumSquared = 0;
+        for (int i = 0; i < employeeCount; i++) {
+            sumSquared += (mean - employees[i].getQ1Sales())*(mean - employees[i].getQ1Sales());
+            sumSquared += (mean - employees[i].getQ2Sales())*(mean - employees[i].getQ2Sales());
+            sumSquared += (mean - employees[i].getQ3Sales())*(mean - employees[i].getQ3Sales());
+            sumSquared += (mean - employees[i].getQ4Sales())*(mean - employees[i].getQ4Sales());
+        }
+        return Math.sqrt(sumSquared/employeeCount/4);
+    }
 }
