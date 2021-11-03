@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LNDS:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LNDS_jar</output-path>
+    <root id="archive" name="LNDS.jar">
+      <element id="module-output" name="LNDS" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../BreezySwing/BreezySwing.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
