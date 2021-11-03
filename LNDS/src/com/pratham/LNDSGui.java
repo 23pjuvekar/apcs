@@ -3,7 +3,6 @@ package com.pratham;
 import BreezySwing.GBDialog;
 import BreezySwing.GBFrame;
 import BreezySwing.GBPanel;
-import BreezySwing.IntegerField;
 
 import javax.swing.*;
 
@@ -17,10 +16,13 @@ public class LNDSGui extends GBFrame {
     private GBPanel mainPanel;
 
     //Buttons for operations
-    private JButton inputButton;
+    private JButton addButton;
+    private JButton editButton;
     private JButton outputButton;
     private JButton resetButton;
     private JButton exitButton;
+
+    final int MAX_NUMBERS = 25;
 
     public void showMainScreen() {
 
@@ -39,18 +41,22 @@ public class LNDSGui extends GBFrame {
         numbersPanel.addTextField(numberArrayString, 2, 1, 1, 1).setEnabled(false);
 
         GBPanel buttonsPanel = mainPanel.addPanel(2, 1, 1, 1);
-        inputButton = buttonsPanel.addButton("Input", 1, 1, 1, 1);
-        outputButton = buttonsPanel.addButton("Output", 1, 2, 1, 1);
-        resetButton = buttonsPanel.addButton("Reset", 1, 3, 1, 1);
-        exitButton = buttonsPanel.addButton("Exit", 1, 4, 1, 1);
+        addButton = buttonsPanel.addButton("Add", 1, 1, 1, 1);
+        editButton = buttonsPanel.addButton("Edit", 1, 2, 1, 1);
+        outputButton = buttonsPanel.addButton("Output", 1, 3, 1, 1);
+        resetButton = buttonsPanel.addButton("Reset", 1, 4, 1, 1);
+        exitButton = buttonsPanel.addButton("Exit", 1, 5, 1, 1);
 
         revalidate();
     }
 
     //Method for Drop Down
     public void buttonClicked(JButton buttonObj) {
-        if ( buttonObj == inputButton ) {
-            GBDialog dialog = new InputDialog(this, numberArray);
+        if ( buttonObj == addButton) {
+            GBDialog dialog = new InputDialog(this, numberArray, false);
+            dialog.setVisible(true);
+        } else if ( buttonObj == editButton ) {
+            GBDialog dialog = new InputDialog(this, numberArray, true);
             dialog.setVisible(true);
         } else if ( buttonObj == outputButton ) {
             GBDialog dialog = new OutputDialog(this, numberArray);
@@ -75,12 +81,13 @@ public class LNDSGui extends GBFrame {
     public class InputDialog extends GBDialog {
 
         private NumberArray numberArray;
+        private boolean edit;
 
-        JTextField numbersField;
-        JButton okBtn;
-        JButton cancelBtn;
+        private JTextField numbersField;
+        private JButton okBtn;
+        private JButton cancelBtn;
 
-        public InputDialog(JFrame parent, NumberArray numberArray){
+        public InputDialog(JFrame parent, NumberArray numberArray, boolean edit){
 
             super (parent);                                 // ** REQUIRED **
             setTitle ("Input");
@@ -90,16 +97,22 @@ public class LNDSGui extends GBFrame {
 
             // store the number array
             this.numberArray = numberArray;
+            this.edit = edit;
 
             //add the fields and buttons
-            addLabel ("Numbers to add (comma separated e.g. 5, 6, 10)", 1,1,4,1);
-            numbersField = addTextField ("", 2,1,4,1);
+            if ( edit ) {
+                addLabel("Numbers to edit (comma separated e.g. 5, 6, 10)", 1, 1, 4, 1);
+                numbersField = addTextField (numberArray.toString(), 2,1,4,1);
+            } else {
+                addLabel("Numbers to add (comma separated e.g. 5, 6, 10)", 1, 1, 4, 1);
+                numbersField = addTextField ("", 2,1,4,1);
+            }
             okBtn = addButton ("OK", 3,1,1,1);
             cancelBtn = addButton ("Cancel", 3,2,1,1);
         }
 
         //parse numbers into array to add
-        public int[] getNumbers() throws Exception {
+        private int[] getNumbers() throws Exception {
             String[] numberStrings = numbersField.getText().split(",");
             int[] numbers = new int[numberStrings.length];
             for (int i=0; i<numberStrings.length; i++) {
@@ -111,9 +124,26 @@ public class LNDSGui extends GBFrame {
         public void buttonClicked(JButton buttonObj) {
             if ( buttonObj == okBtn ) {
                 try {
-                    numberArray.addArray(getNumbers());
+                    int[] userInput = getNumbers();
+                    if ( edit ) {
+                        if ( userInput.length > MAX_NUMBERS ) {
+                            messageBox("You can have maximum of " + MAX_NUMBERS + " numbers.\nReduce your input by "
+                                    + (userInput.length - MAX_NUMBERS) + " numbers");
+                            numbersField.requestFocus();
+                            return;
+                        }
+                        numberArray.reset(); //empty current numbers
+                    } else {
+                        if ( numberArray.getLength() + userInput.length > MAX_NUMBERS ) {
+                            messageBox("You can have maximum of " + MAX_NUMBERS + " numbers.\nReduce your input by "
+                                    + (numberArray.getLength() + userInput.length - MAX_NUMBERS) + " numbers");
+                            numbersField.requestFocus();
+                            return;
+                        }
+                    }
+                    numberArray.addArray(userInput);
                 } catch (Exception ex) {
-                    messageBox("Error parsing input: " + ex.getMessage());
+                    messageBox("Error parsing input:\n" + ex.getMessage());
                     numbersField.requestFocus();
                     return;
                 }
@@ -124,7 +154,7 @@ public class LNDSGui extends GBFrame {
 
     public class OutputDialog extends GBDialog {
 
-        JButton okBtn;
+        private JButton okBtn;
 
         public OutputDialog(JFrame parent, NumberArray numberArray){
 
