@@ -79,13 +79,15 @@ public class Characters {
             }
         }
 
-        //get the word and capitalize first letter
+        //get the word
         String word = str.substring(start, end);
         start = end;
-        word = word.substring(0,1).toUpperCase() + word.substring(1);
         numWords++;
 
-        //if we have stored the word increase count or store as new word
+        //capitalize first letter
+        word = word.substring(0,1).toUpperCase() + word.substring(1);
+
+        //if we have stored the word increase count
         boolean found = false;
         for ( int i=0; i<wordsStored; i++ ) {
             if ( words[i].getWord().equalsIgnoreCase(word) ) {
@@ -95,10 +97,10 @@ public class Characters {
             }
         }
         if ( !found ) {
+            //store as new word
             words[wordsStored] = new Word(word);
             wordsStored++;
         }
-
     }
 
     //count the words in the string
