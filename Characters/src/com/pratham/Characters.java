@@ -36,6 +36,19 @@ public class Characters {
         return wordsStored;
     }
 
+    public int getMaxWordLength() {
+        if ( wordsStored == 0 ) {
+            return 0;
+        }
+        int max = words[0].getWord().length();
+        for ( int i=0; i<wordsStored; i++ ) {
+            if ( words[i].getWord().length() > max ) {
+                max = words[i].getWord().length();
+            }
+        }
+        return max;
+    }
+
     //count the characters in the string (ignore space characters)
     private void countCharacters (String str) {
         for (int i = 0; i < str.length(); i++) {
