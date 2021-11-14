@@ -35,7 +35,7 @@ public class CharactersGui extends GBFrame {
         heatMapButton = inputButtonPanel.addButton( "Heat Map", 1, 3, 1, 1);
     }
 
-    public String barString(Word w) {
+    private String barString(Word w) {
         String barString = "";
         for ( int i=0; i<w.getCount(); i++ ) {
             barString += "█"; //print block
@@ -129,37 +129,6 @@ public class CharactersGui extends GBFrame {
             }
 
             revalidate();
-        }
-    }
-
-    public class HeatMapDialog extends GBDialog {
-
-        private JButton okBtn;
-
-        public HeatMapDialog(JFrame parent, Characters characters) {
-            super (parent);                                 // ** REQUIRED **
-
-            setTitle ("Heat Map");
-            setDlgCloseIndicator ("Ok");
-            setLocationRelativeTo(null);
-
-            //size based on how many words to show
-            this.setSize(600, 125 + characters.getWordsStored()*25);
-
-            GBPanel graphPanel = this.addPanel(1, 1, 1, 1);
-            int row = 1;
-            Word[] words = characters.getWords();
-            for ( int i=0; i< characters.getWordsStored(); i++ ) {
-                int fontSize = words[i].getCount()*15;
-                graphPanel.addLabel( words[i].getWord()+" ("+words[i].getCount()+")", row++, 1, 1, 1 ).setFont(new Font("Courier", 0, fontSize));;
-            }
-
-            GBPanel buttonPanel = this.addPanel(2, 1, 1, 1);
-            okBtn = buttonPanel.addButton ("OK", 1,1,1,1);
-        }
-
-        public void buttonClicked(JButton buttonObj) {
-            dispose();
         }
     }
 
