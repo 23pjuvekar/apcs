@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 public class Parser {
 
-    String expression = null;
-    String[] parts = new String[0];
+    private String expression = null;
+    private String[] parts = new String[0];
 
     private int start = 0; //start index
     private int end = 0; //end index
@@ -131,7 +131,7 @@ public class Parser {
         evaluateAddSubParts();
     }
 
-    public String evaluate ( String expr ) throws Exception  {
+    public String evaluate (String expr) throws Exception  {
 
         expression = expr.trim(); //remove spaces at start and end
 
@@ -162,21 +162,4 @@ public class Parser {
         return parts[0]; //return what remains as answer
     }
 
-    public static void main (String[] args) {
-        try {
-            System.out.println(new Parser().evaluate("  78  + 23  "));
-        } catch (Exception ex) {
-            System.out.println (ex.getMessage());
-        }
-        try {
-            System.out.println(new Parser().evaluate(" =  -56  +2  "));
-        } catch (Exception ex) {
-            System.out.println (ex.getMessage());
-        }
-        try {
-            System.out.println(new Parser().evaluate(" =  -7*-2 + 3 / 4 +6 "));
-        } catch (Exception ex) {
-            System.out.println (ex.getMessage());
-        }
-    }
 }
