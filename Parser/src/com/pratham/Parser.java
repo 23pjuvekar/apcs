@@ -1,5 +1,7 @@
 package com.pratham;
 
+import java.math.BigDecimal;
+
 public class Parser {
 
     String expression = null;
@@ -34,20 +36,8 @@ public class Parser {
         parts = newParts;
     }
 
-    private void skipSpaces() {
-        for (int i=start; i<expression.length(); i++) {
-            char nextChar = expression.charAt(i);
-            if (Character.isWhitespace(nextChar)) {
-                start++; end++; //skip white spaces
-            } else {
-                break;
-            }
-        }
-    }
-
     private void parseNumber() throws Exception  {
 
-        skipSpaces(); //skip spaces
         if ( start >= expression.length() ) {
             throw new Exception ("No number found at position "+start);
         }
@@ -57,8 +47,9 @@ public class Parser {
         if ( nextChar == '-' ) {
             if ( parts.length > 0 ) {
                 String lastOperator = parts[parts.length-1];
-                //negative can follow only * or \
-                if ( !lastOperator.equals("*") && !lastOperator.equals("/") ) {
+                //negative can follow only an operator
+                if ( !lastOperator.equals("*") && !lastOperator.equals("/") &&
+                        !lastOperator.equals("+") && !lastOperator.equals("-") ) {
                     throw new Exception ("Unexpected negative sign at position "+start);
                 }
             }
@@ -67,7 +58,7 @@ public class Parser {
 
         for ( int i=end; i<expression.length(); i++ ) {
             nextChar = expression.charAt(i);
-            if ( Character.isDigit(nextChar) ) {
+            if ( Character.isDigit(nextChar) || nextChar == '.') {
                 end++; //digit so move to next
             } else {
                 break; //end of number so stop
@@ -83,8 +74,6 @@ public class Parser {
 
     private void parseOperator() throws Exception {
 
-        skipSpaces(); //skip spaces
-
         //next character has to an operator
         char nextChar = expression.charAt(start);
         if ( nextChar != '+' && nextChar != '-' &&
@@ -96,12 +85,17 @@ public class Parser {
         start++; end++; //move forward
     }
 
+    private String removeTrailingZeroes(String numStr) {
+        BigDecimal bd = new BigDecimal(numStr);
+        return bd.stripTrailingZeros().toPlainString();
+    }
+
     private void evaluateMulDivParts() {
         for (int i=1; i<parts.length; i+=2 ) {
             //first do * and /
             if ( parts[i].equals("*") || parts[i].equals("/") ) {
-                int num1 = Integer.parseInt(parts[i-1]);
-                int num2 = Integer.parseInt(parts[i+1]);
+                double num1 = Double.parseDouble(parts[i-1]);
+                double num2 = Double.parseDouble(parts[i+1]);
                 String answer;
                 if ( parts[i].equals("*") ) {
                     answer = "" + (num1*num2);
@@ -118,8 +112,8 @@ public class Parser {
         for (int i=1; i<parts.length; i+=2 ) {
             //first do * and /
             if ( parts[i].equals("+") || parts[i].equals("-") ) {
-                int num1 = Integer.parseInt(parts[i-1]);
-                int num2 = Integer.parseInt(parts[i+1]);
+                double num1 = Double.parseDouble(parts[i-1]);
+                double num2 = Double.parseDouble(parts[i+1]);
                 String answer;
                 if ( parts[i].equals("+") ) {
                     answer = "" + (num1+num2);
@@ -157,11 +151,13 @@ public class Parser {
         while ( end < expression.length() ) {
             parseOperator();
             parseNumber();
-            skipSpaces();
         }
 
         //evaluate the string using order of operations
         evaluateParts();
+
+        //convert answer to int if needed
+        parts[0] = removeTrailingZeroes(parts[0]);
 
         return parts[0]; //return what remains as answer
     }
