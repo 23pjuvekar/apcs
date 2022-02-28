@@ -2,6 +2,7 @@ package com.pratham;
 
 import BreezySwing.GBFrame;
 import BreezySwing.GBPanel;
+import BreezySwing.MessageBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -115,15 +116,27 @@ public class InsertionSortGui extends GBFrame {
         outputArea.setText(displayString);
     }
 
+    private void showMessageBox(String msg) {
+        MessageBox msgBox = new MessageBox( this, msg);
+        msgBox.setLocationRelativeTo(null); //center
+        msgBox.setVisible(true);
+    }
+
     public void buttonClicked(JButton buttonObj) {
 
         if ( buttonObj == addButton ) {
             if ( numbersToAddField.getText().trim().isEmpty() ) {
-                messageBox("Number list cannot be empty\nPlease add a comma separate list");
+                showMessageBox("Number list cannot be empty\nPlease add a comma separate list");
                 numbersToAddField.requestFocus();
                 return;
             }
-            numberList.add(numbersToAddField.getText()); //add to the list
+            try {
+                numberList.add(numbersToAddField.getText()); //add to the list
+            } catch ( Exception ex ) {
+                showMessageBox("Bad input for number list\n" + ex.getMessage());
+                numbersToAddField.requestFocus();
+                return;
+            }
             numbersToAddField.setText(""); //clear the input
             displayNumberList(); //display list information
         }

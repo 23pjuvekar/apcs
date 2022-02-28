@@ -41,12 +41,7 @@ public class IntegerArray {
     public void add(String commaSeparatedList) {
         String[] numsArray = commaSeparatedList.split(",");
         for (String s: numsArray) {
-            try {
-                int num = Integer.parseInt(s.trim());
-                add(num);
-            } catch (Exception e) {
-                System.out.println ("Bad input "+s);
-            }
+            add(Integer.parseInt(s.trim()));
         }
     }
 
