@@ -10,7 +10,7 @@ import java.awt.*;
 
 import static java.lang.System.exit;
 
-public class PeopleSearchGui  extends GBFrame {
+public class PeopleSearchGui extends GBFrame {
 
     PersonArray personArray = new PersonArray();
 
@@ -28,6 +28,7 @@ public class PeopleSearchGui  extends GBFrame {
     private JTextField nameField;
     private IntegerField ageField;
     private JButton addBtn;
+    private JButton searchBtn;
 
     public PeopleSearchGui() {
 
@@ -102,8 +103,38 @@ public class PeopleSearchGui  extends GBFrame {
         revalidate();
     }
 
+    void createSearchByNameSequentialMenu(){
+        this.setSize(500,150);
+        mainPanel.addLabel("Name", 1,1,1,1);
+        nameField = mainPanel.addTextField("",1,2,2,1);
+        nameField.requestFocus();
+
+        searchBtn = mainPanel.addButton("Search",2,1,1,1);
+
+    }
+
+    void showSequentialResults(){
+        this.setSize(500,150);
+        JTextArea infoField = mainPanel.addTextArea(
+                personArray.getAllSequentialSortResults(nameField.getText()),
+                1,1,1,1);
+        infoField.setEditable(false);
+        Font font = new Font("Courier", Font.BOLD,14);
+        infoField.setFont(font);
+        revalidate();
+    }
+
     //Method for button clicks
     public void buttonClicked(JButton buttonObj) {
+        if(buttonObj == addBtn){
+            personArray.addPerson(nameField.getText(), Integer.parseInt(ageField.getText()));
+        } else if (buttonObj == searchBtn){
+            if (mainPanel != null) {
+                this.remove(mainPanel); //remove previous screen
+            }
+            mainPanel = addPanel(1, 1, 1, 1); //add new panel
+            showSequentialResults();
+        }
     }
 
     //Method for Drop Down
@@ -117,7 +148,7 @@ public class PeopleSearchGui  extends GBFrame {
         } else if (menuItem == showAllPeopleMenu) {
             createShowAllPeopleScreen();
         }  else if (menuItem == searchByNameSequentialMenu) {
-
+            createSearchByNameSequentialMenu();
         }  else if (menuItem == searchByNameBinaryMenu) {
 
         }  else if (menuItem == quitMenu) {

@@ -2,8 +2,8 @@ package com.pratham;
 
 public class PersonArray {
 
-    Person[] people = new Person[0]; //empty array by default
-    int numComparisons = 0;
+    private Person[] people = new Person[0]; //empty array by default
+    private int numComparisons = 0;
 
     public PersonArray() {
     }
@@ -65,7 +65,7 @@ public class PersonArray {
         }
         for (int i=0; i<people.length; i++) {
             numComparisons++;
-            if ( people[i].getName().equalsIgnoreCase(name) ) {
+            if ( people[i].getName().toLowerCase().startsWith(name.toLowerCase()) ) {
                 return people[i];
             }
         }
@@ -113,6 +113,22 @@ public class PersonArray {
             Person person = sortedPeople[i];
             retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
         }
+
+        return retMessage;
+    }
+
+    public String getAllSequentialSortResults(String name){
+
+        String retMessage = "";
+
+        if (sequentialSearch(name) == null){
+            return retMessage = "There is no person with the name " + name;
+        }
+
+        retMessage += String.format("%-20s %-4s %n", "Name", "Age");
+        retMessage += String.format("%-20s %-4d %n", sequentialSearch(name).getName(), sequentialSearch(name).getAge());
+
+        retMessage += String.format("%n%nNumber of Comparisons: %d", numComparisons);
 
         return retMessage;
     }
