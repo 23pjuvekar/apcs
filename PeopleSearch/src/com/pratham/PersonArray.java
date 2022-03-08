@@ -65,7 +65,7 @@ public class PersonArray {
         }
         for (int i=0; i<people.length; i++) {
             numComparisons++;
-            if ( people[i].getName().toLowerCase().startsWith(name.toLowerCase()) ) {
+            if ( people[i].getName().equalsIgnoreCase(name) ) {
                 return people[i];
             }
         }
@@ -86,7 +86,7 @@ public class PersonArray {
         while ( low <= high ) {
             numComparisons++;
             int mid = (low+high)/2;
-            if ( sortedPeople[mid].getName().compareToIgnoreCase(name) < 0 ) {
+            if ( sortedPeople[mid].getName().toLowerCase().compareToIgnoreCase(name) < 0 ) {
                 low = mid + 1;
             } else if ( sortedPeople[mid].getName().compareToIgnoreCase(name) > 0 ) {
                 high = mid - 1;
@@ -121,14 +121,30 @@ public class PersonArray {
 
         String retMessage = "";
 
-        if (sequentialSearch(name) == null){
+        Person person = sequentialSearch(name);
+        if ( person == null){
             return retMessage = "There is no person with the name " + name;
         }
 
         retMessage += String.format("%-20s %-4s %n", "Name", "Age");
-        retMessage += String.format("%-20s %-4d %n", sequentialSearch(name).getName(), sequentialSearch(name).getAge());
+        retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
+        retMessage += String.format("%nNumber of Comparisons: %d", numComparisons);
 
-        retMessage += String.format("%n%nNumber of Comparisons: %d", numComparisons);
+        return retMessage;
+    }
+
+    public String getAllBinarySortResults(String name){
+
+        String retMessage = "";
+
+        Person person = binarySearch(name);
+        if ( person == null){
+            return retMessage = "There is no person with the name " + name;
+        }
+
+        retMessage += String.format("%-20s %-4s %n", "Name", "Age");
+        retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
+        retMessage += String.format("%nNumber of Comparisons: %d", numComparisons);
 
         return retMessage;
     }

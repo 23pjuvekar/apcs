@@ -28,7 +28,8 @@ public class PeopleSearchGui extends GBFrame {
     private JTextField nameField;
     private IntegerField ageField;
     private JButton addBtn;
-    private JButton searchBtn;
+    private JButton seqSearchBtn;
+    private JButton binSearchBtn;
 
     public PeopleSearchGui() {
 
@@ -49,19 +50,19 @@ public class PeopleSearchGui extends GBFrame {
 
     //create test data
     public void createTestData() {
-        personArray.addPerson("Tom Sawyer", 44);
-        personArray.addPerson("Tim Burns", 38);
-        personArray.addPerson("Aaron Rogers", 42);
-        personArray.addPerson("Kelly Chen", 32);
-        personArray.addPerson("Ben Stiles", 25);
-        personArray.addPerson("Evelyn Masters", 22);
-        personArray.addPerson("Kim Cho", 33);
-        personArray.addPerson("Zara Khan", 29);
-        personArray.addPerson("John Smith", 22);
-        personArray.addPerson("Jane Seymour", 18);
-        personArray.addPerson("Quentin Brown", 33);
-        personArray.addPerson("Carol Freer", 26);
-        personArray.addPerson("Doug Morrison", 37);
+        personArray.addPerson("Tom", 44);
+        personArray.addPerson("Tim", 38);
+        personArray.addPerson("Aaron", 42);
+        personArray.addPerson("Kelly", 32);
+        personArray.addPerson("Ben", 25);
+        personArray.addPerson("Evelyn", 22);
+        personArray.addPerson("Kim", 33);
+        personArray.addPerson("Zara", 29);
+        personArray.addPerson("John", 22);
+        personArray.addPerson("Jane", 18);
+        personArray.addPerson("Quentin", 33);
+        personArray.addPerson("Carol", 26);
+        personArray.addPerson("Doug", 37);
     }
 
     //show general info screen
@@ -103,37 +104,75 @@ public class PeopleSearchGui extends GBFrame {
         revalidate();
     }
 
-    void createSearchByNameSequentialMenu(){
+    void createSearchByNameSequentialScreen(){
         this.setSize(500,150);
-        mainPanel.addLabel("Name", 1,1,1,1);
-        nameField = mainPanel.addTextField("",1,2,2,1);
+        mainPanel.addLabel("Sequential Search", 1,1,1,1);
+        mainPanel.addLabel("Name", 2,1,1,1);
+        nameField = mainPanel.addTextField("",2,2,2,1);
         nameField.requestFocus();
-
-        searchBtn = mainPanel.addButton("Search",2,1,1,1);
-
+        seqSearchBtn = mainPanel.addButton("Search",3,1,1,1);
     }
 
-    void showSequentialResults(){
+    void showSequentialSearchResults(){
         this.setSize(500,150);
         JTextArea infoField = mainPanel.addTextArea(
                 personArray.getAllSequentialSortResults(nameField.getText()),
-                1,1,1,1);
+                1,1,2,1);
         infoField.setEditable(false);
         Font font = new Font("Courier", Font.BOLD,14);
         infoField.setFont(font);
+        if ( personArray.sequentialSearch(nameField.getText()) != null ) {
+            mainPanel.addButton("Edit", 2, 1, 1, 1);
+            mainPanel.addButton("Delete", 2, 2, 1, 1);
+        }
+        revalidate();
+    }
+
+    void createSearchByNameBinaryScreen(){
+        this.setSize(500,150);
+        mainPanel.addLabel("Binary Search", 1,1,1,1);
+        mainPanel.addLabel("Name", 2,1,1,1);
+        nameField = mainPanel.addTextField("",2,2,2,1);
+        nameField.requestFocus();
+        binSearchBtn = mainPanel.addButton("Search",3,1,1,1);
+    }
+
+    void showBinarySearchResults(){
+        this.setSize(500,150);
+        JTextArea infoField = mainPanel.addTextArea(
+                personArray.getAllBinarySortResults(nameField.getText()),
+                1,1,2,1);
+        infoField.setEditable(false);
+        Font font = new Font("Courier", Font.BOLD,14);
+        infoField.setFont(font);
+        if ( personArray.binarySearch(nameField.getText()) != null ) {
+            mainPanel.addButton("Edit", 2, 1, 1, 1);
+            mainPanel.addButton("Delete", 2, 2, 1, 1);
+        }
         revalidate();
     }
 
     //Method for button clicks
     public void buttonClicked(JButton buttonObj) {
         if(buttonObj == addBtn){
-            personArray.addPerson(nameField.getText(), Integer.parseInt(ageField.getText()));
-        } else if (buttonObj == searchBtn){
+            personArray.addPerson(nameField.getText(), ageField.getNumber());
             if (mainPanel != null) {
                 this.remove(mainPanel); //remove previous screen
             }
             mainPanel = addPanel(1, 1, 1, 1); //add new panel
-            showSequentialResults();
+            createInfoScreen();
+        } else if (buttonObj == seqSearchBtn){
+            if (mainPanel != null) {
+                this.remove(mainPanel); //remove previous screen
+            }
+            mainPanel = addPanel(1, 1, 1, 1); //add new panel
+            showSequentialSearchResults();
+        } else if (buttonObj == binSearchBtn){
+            if (mainPanel != null) {
+                this.remove(mainPanel); //remove previous screen
+            }
+            mainPanel = addPanel(1, 1, 1, 1); //add new panel
+            showBinarySearchResults();
         }
     }
 
@@ -148,9 +187,9 @@ public class PeopleSearchGui extends GBFrame {
         } else if (menuItem == showAllPeopleMenu) {
             createShowAllPeopleScreen();
         }  else if (menuItem == searchByNameSequentialMenu) {
-            createSearchByNameSequentialMenu();
+            createSearchByNameSequentialScreen();
         }  else if (menuItem == searchByNameBinaryMenu) {
-
+            createSearchByNameBinaryScreen();
         }  else if (menuItem == quitMenu) {
             exit(0);
         }
