@@ -22,18 +22,22 @@ public class PeopleSearchGui extends GBFrame {
     private JMenuItem showAllPeopleMenu;
     private JMenuItem searchByNameSequentialMenu;
     private JMenuItem searchByNameBinaryMenu;
+    private JMenuItem addTestData;
+    private JMenuItem clearAllData;
     private JMenuItem quitMenu;
 
     //add Person fields
     private JTextField nameField;
+    private JTextField nameSearchField;
     private IntegerField ageField;
     private JButton addBtn;
     private JButton seqSearchBtn;
     private JButton binSearchBtn;
+    private JButton editBtn;
+    private JButton deleteBtn;
+    private JButton saveBtn;
 
     public PeopleSearchGui() {
-
-        createTestData();
 
         //main panel
         mainPanel = addPanel(1, 1, 1, 1);
@@ -44,6 +48,8 @@ public class PeopleSearchGui extends GBFrame {
         showAllPeopleMenu = addMenuItem("People", "Show all People");
         searchByNameSequentialMenu = addMenuItem("People", "Search Sequential");
         searchByNameBinaryMenu = addMenuItem("People", "Search Binary");
+        addTestData = addMenuItem("People", "Add Test Data");
+        clearAllData = addMenuItem("People", "Clear All Data");
         quitMenu = addMenuItem("People", "Quit");
 
     }
@@ -92,6 +98,24 @@ public class PeopleSearchGui extends GBFrame {
         revalidate();
     }
 
+    //edit person
+    void createEditPersonScreen() {
+        this.setSize(500,150);
+
+        Person person = personArray.sequentialSearch(nameSearchField.getText());
+
+        mainPanel.addLabel("Name", 1, 1, 1, 1);
+        nameField = mainPanel.addTextField(person.getName(), 1, 2, 2, 1);
+        nameField.requestFocus();
+
+        mainPanel.addLabel("Age", 2, 1, 1, 1);
+        ageField = mainPanel.addIntegerField(person.getAge(), 2, 2, 2, 1);
+
+        saveBtn = mainPanel.addButton("Save", 3, 1, 3, 1);
+
+        revalidate();
+    }
+
     //show all people
     void createShowAllPeopleScreen() {
         this.setSize(500,80+16*personArray.getNumPeople());
@@ -108,6 +132,15 @@ public class PeopleSearchGui extends GBFrame {
         if ( nameField.getText().isEmpty() ) {
             showMessageBox("Name cannot be empty");
             nameField.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean CheckNameSearch() {
+        if ( nameSearchField.getText().isEmpty() ) {
+            showMessageBox("Name cannot be empty");
+            nameSearchField.requestFocus();
             return false;
         }
         return true;
@@ -131,22 +164,22 @@ public class PeopleSearchGui extends GBFrame {
         this.setSize(500,150);
         mainPanel.addLabel("Sequential Search", 1,1,1,1);
         mainPanel.addLabel("Name", 2,1,1,1);
-        nameField = mainPanel.addTextField("",2,2,2,1);
-        nameField.requestFocus();
+        nameSearchField = mainPanel.addTextField("",2,2,2,1);
+        nameSearchField.requestFocus();
         seqSearchBtn = mainPanel.addButton("Search",3,1,2,1);
     }
 
     void showSequentialSearchResults(){
         this.setSize(500,150);
         JTextArea infoField = mainPanel.addTextArea(
-                personArray.getAllSequentialSortResults(nameField.getText()),
+                personArray.getAllSequentialSortResults(nameSearchField.getText()),
                 1,1,2,1);
         infoField.setEditable(false);
         Font font = new Font("Courier", Font.BOLD,14);
         infoField.setFont(font);
-        if ( personArray.sequentialSearch(nameField.getText()) != null ) {
-            mainPanel.addButton("Edit", 2, 1, 1, 1);
-            mainPanel.addButton("Delete", 2, 2, 1, 1);
+        if ( personArray.sequentialSearch(nameSearchField.getText()) != null ) {
+            editBtn = mainPanel.addButton("Edit", 2, 1, 1, 1);
+            deleteBtn = mainPanel.addButton("Delete", 2, 2, 1, 1);
         }
         revalidate();
     }
@@ -155,24 +188,31 @@ public class PeopleSearchGui extends GBFrame {
         this.setSize(500,150);
         mainPanel.addLabel("Binary Search", 1,1,1,1);
         mainPanel.addLabel("Name", 2,1,1,1);
-        nameField = mainPanel.addTextField("",2,2,2,1);
-        nameField.requestFocus();
+        nameSearchField = mainPanel.addTextField("",2,2,2,1);
+        nameSearchField.requestFocus();
         binSearchBtn = mainPanel.addButton("Search",3,1,1,1);
     }
 
     void showBinarySearchResults(){
         this.setSize(500,150);
         JTextArea infoField = mainPanel.addTextArea(
-                personArray.getAllBinarySortResults(nameField.getText()),
+                personArray.getAllBinarySortResults(nameSearchField.getText()),
                 1,1,2,1);
         infoField.setEditable(false);
         Font font = new Font("Courier", Font.BOLD,14);
         infoField.setFont(font);
-        if ( personArray.binarySearch(nameField.getText()) != null ) {
-            mainPanel.addButton("Edit", 2, 1, 1, 1);
-            mainPanel.addButton("Delete", 2, 2, 1, 1);
+        if ( personArray.binarySearch(nameSearchField.getText()) != null ) {
+            editBtn = mainPanel.addButton("Edit", 2, 1, 1, 1);
+            deleteBtn = mainPanel.addButton("Delete", 2, 2, 1, 1);
         }
         revalidate();
+    }
+
+    private void resetScreen() {
+        if (mainPanel != null) {
+            this.remove(mainPanel); //remove previous screen
+        }
+        mainPanel = addPanel(1, 1, 1, 1); //add new panel
     }
 
     //Method for button clicks
@@ -182,29 +222,42 @@ public class PeopleSearchGui extends GBFrame {
                 return;
             }
             personArray.addPerson(nameField.getText(), ageField.getNumber());
-            if (mainPanel != null) {
-                this.remove(mainPanel); //remove previous screen
-            }
-            mainPanel = addPanel(1, 1, 1, 1); //add new panel
+            resetScreen();
             createInfoScreen();
         } else if (buttonObj == seqSearchBtn){
-            if ( !CheckName() ) {
+            if ( !CheckNameSearch() ) {
                 return;
             }
-            if (mainPanel != null) {
-                this.remove(mainPanel); //remove previous screen
-            }
-            mainPanel = addPanel(1, 1, 1, 1); //add new panel
+            resetScreen();
             showSequentialSearchResults();
         } else if (buttonObj == binSearchBtn){
-            if ( !CheckName() ) {
+            if ( !CheckNameSearch() ) {
                 return;
             }
-            if (mainPanel != null) {
-                this.remove(mainPanel); //remove previous screen
-            }
-            mainPanel = addPanel(1, 1, 1, 1); //add new panel
+            resetScreen();
             showBinarySearchResults();
+        } else if ( buttonObj == editBtn ) {
+            resetScreen();
+            createEditPersonScreen();
+        } else if ( buttonObj == deleteBtn ) {
+            if ( personArray.delete(nameSearchField.getText()) ) {
+                showMessageBox("Deleted " + nameSearchField.getText() + " successfully");
+            } else {
+                showMessageBox("Could not delete " + nameSearchField.getText());
+            }
+            resetScreen();
+            createInfoScreen();
+        } else if ( buttonObj == saveBtn ) {
+            if ( !CheckName() || !CheckAge() ) {
+                return;
+            }
+            if ( personArray.modify(nameSearchField.getText(), nameField.getText(), ageField.getNumber()) ) {
+                showMessageBox("Saved " + nameField.getText() + " successfully");
+            } else {
+                showMessageBox("Could not save " + nameField.getText());
+            }
+            resetScreen();
+            createInfoScreen();
         }
     }
 
@@ -222,6 +275,12 @@ public class PeopleSearchGui extends GBFrame {
             createSearchByNameSequentialScreen();
         }  else if (menuItem == searchByNameBinaryMenu) {
             createSearchByNameBinaryScreen();
+        } else if (menuItem == addTestData) {
+            createTestData();
+            createInfoScreen();
+        } else if (menuItem == clearAllData) {
+            personArray = new PersonArray(); //create new array to clear
+            createInfoScreen();
         }  else if (menuItem == quitMenu) {
             exit(0);
         }
