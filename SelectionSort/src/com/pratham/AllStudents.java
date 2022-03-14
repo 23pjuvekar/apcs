@@ -27,6 +27,11 @@ public class AllStudents {
        return newStudent;
     }
 
+    public void clearStudents() {
+        studentInfo = new StudentInfo[MAX_STUDENTS];
+        studentCounter = 0;
+    }
+
     public double[] getAllFinalAverages() {
         double[] finalAverages = new double[studentCounter];
         for ( int i=0; i<studentCounter; i++ ) {

@@ -104,13 +104,36 @@ public class PeopleSearchGui extends GBFrame {
         revalidate();
     }
 
+    private boolean CheckName() {
+        if ( nameField.getText().isEmpty() ) {
+            showMessageBox("Name cannot be empty");
+            nameField.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean CheckAge() {
+        if ( !ageField.isValidNumber() ) {
+            showMessageBox("Age needs to be a valid number");
+            ageField.requestFocus();
+            return false;
+        }
+        if ( ageField.getNumber() < 1 || ageField.getNumber() > 100 ) {
+            showMessageBox("Age should be between 1 and 99");
+            ageField.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
     void createSearchByNameSequentialScreen(){
         this.setSize(500,150);
         mainPanel.addLabel("Sequential Search", 1,1,1,1);
         mainPanel.addLabel("Name", 2,1,1,1);
         nameField = mainPanel.addTextField("",2,2,2,1);
         nameField.requestFocus();
-        seqSearchBtn = mainPanel.addButton("Search",3,1,1,1);
+        seqSearchBtn = mainPanel.addButton("Search",3,1,2,1);
     }
 
     void showSequentialSearchResults(){
@@ -155,6 +178,9 @@ public class PeopleSearchGui extends GBFrame {
     //Method for button clicks
     public void buttonClicked(JButton buttonObj) {
         if(buttonObj == addBtn){
+            if ( !CheckName() || !CheckAge() ) {
+                return;
+            }
             personArray.addPerson(nameField.getText(), ageField.getNumber());
             if (mainPanel != null) {
                 this.remove(mainPanel); //remove previous screen
@@ -162,12 +188,18 @@ public class PeopleSearchGui extends GBFrame {
             mainPanel = addPanel(1, 1, 1, 1); //add new panel
             createInfoScreen();
         } else if (buttonObj == seqSearchBtn){
+            if ( !CheckName() ) {
+                return;
+            }
             if (mainPanel != null) {
                 this.remove(mainPanel); //remove previous screen
             }
             mainPanel = addPanel(1, 1, 1, 1); //add new panel
             showSequentialSearchResults();
         } else if (buttonObj == binSearchBtn){
+            if ( !CheckName() ) {
+                return;
+            }
             if (mainPanel != null) {
                 this.remove(mainPanel); //remove previous screen
             }

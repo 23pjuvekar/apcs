@@ -19,6 +19,8 @@ public class SelectionSortGui extends GBFrame  {
     private JMenuItem showSortedByNameMenu;
     private JMenuItem showSortedByFinalAvgMenu;
     private JMenuItem showStatisticsMenu;
+    private JMenuItem addTestDataMenu;
+    private JMenuItem clearAllDataMenu;
     private JMenuItem quitMenu;
 
     //add student fields
@@ -31,7 +33,7 @@ public class SelectionSortGui extends GBFrame  {
 
     public SelectionSortGui() {
 
-        createTestData();
+        //createTestData();
 
         //main panel
         mainPanel = addPanel(1,1,1,1);
@@ -42,6 +44,8 @@ public class SelectionSortGui extends GBFrame  {
         showSortedByNameMenu = addMenuItem("Students", "Sort Students by Name");
         showSortedByFinalAvgMenu = addMenuItem("Students", "Sort Students by Grades");
         showStatisticsMenu = addMenuItem("Students", "Show Statistics");
+        addTestDataMenu = addMenuItem("Students", "Add Test Data");
+        clearAllDataMenu = addMenuItem("Students", "Clear All Data");
         quitMenu = addMenuItem("Students", "Quit");
     }
 
@@ -82,17 +86,6 @@ public class SelectionSortGui extends GBFrame  {
         double[] quizGrades5 = {79, 85, 81, 93, 95, 83, 95, 78, 99, 91};
         studentInfo5.setQuizGrade(quizGrades5);
         studentInfo5.setHomeworkAvg(92.0);
-
-//        studentInfo = allStudents.addStudent("Tom Smith 6");
-//        studentInfo = allStudents.addStudent("Tom Smith 7");
-//        studentInfo = allStudents.addStudent("Tom Smith 8");
-//        studentInfo = allStudents.addStudent("Tom Smith 9");
-//        studentInfo = allStudents.addStudent("Tom Smith 10");
-//        studentInfo = allStudents.addStudent("Tom Smith 11");
-//        studentInfo = allStudents.addStudent("Tom Smith 12");
-//        studentInfo = allStudents.addStudent("Tom Smith 13");
-//        studentInfo = allStudents.addStudent("Tom Smith 14");
-//        studentInfo = allStudents.addStudent("Tom Smith 15");
     }
 
     //show general info screen
@@ -320,10 +313,16 @@ public class SelectionSortGui extends GBFrame  {
             }
         } else if (menuItem == showSortedByNameMenu) {
             showSortedByNameScreen();
-        }  else if (menuItem == showSortedByFinalAvgMenu) {
+        } else if (menuItem == showSortedByFinalAvgMenu) {
             showSortedByFinalAvgScreen();
-        }  else if (menuItem == showStatisticsMenu) {
+        } else if (menuItem == showStatisticsMenu) {
             showStatisticsScreen();
+        } else if (menuItem == addTestDataMenu ) {
+            this.createTestData();
+            createInfoScreen();
+        } else if (menuItem == clearAllDataMenu ) {
+            allStudents.clearStudents();
+            createInfoScreen();
         }  else if (menuItem == quitMenu) {
             exit(0);
         }
