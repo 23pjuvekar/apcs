@@ -58,6 +58,38 @@ public class PersonArray {
         return sortedPeople;
     }
 
+    private Person[] selectionSortByAge() {
+
+        // copy persons into new array to sort
+        Person[] sortedPeople = new Person[people.length];
+        for ( int i=0; i < people.length; i++ ) {
+            sortedPeople[i] = people[i];
+        }
+
+        if ( sortedPeople.length <= 1 ) {
+            return sortedPeople; // nothing to sort
+        }
+
+        int n = sortedPeople.length;
+
+        // One by one move boundary of unsorted subarray
+        for (int i = 0; i < n-1; i++) {
+            // Find the minimum element in unsorted array
+            int min_idx = i;
+            for (int j = i+1; j < n; j++){
+                if (sortedPeople[j].getAge() < sortedPeople[min_idx].getAge()) {
+                    min_idx = j;
+                }
+            }
+            // Swap the found minimum element with the first element
+            Person temp = sortedPeople[min_idx];
+            sortedPeople[min_idx] = sortedPeople[i];
+            sortedPeople[i] = temp;
+        }
+
+        return sortedPeople;
+    }
+
     public Person sequentialSearch(String name) {
         numComparisons = 0;
         if ( people.length == 0 ) {
@@ -108,7 +140,28 @@ public class PersonArray {
         }
 
         retMessage += String.format("%-20s %-4s %n", "Name", "Age");
+        retMessage += String.format("%-20s %-4s %n", "----", "---");
         Person[] sortedPeople = selectionSortByName();
+        for (int i = 0; i < sortedPeople.length; i++) {
+            Person person = sortedPeople[i];
+            retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
+        }
+
+        return retMessage;
+    }
+
+    public String getAllPeopleSortedByAge() {
+
+        String retMessage = "";
+
+        if (getNumPeople() == 0) {
+            retMessage = "There are currently no people in the system.";
+            return retMessage;
+        }
+
+        retMessage += String.format("%-20s %-4s %n", "Name", "Age");
+        retMessage += String.format("%-20s %-4s %n", "----", "---");
+        Person[] sortedPeople = selectionSortByAge();
         for (int i = 0; i < sortedPeople.length; i++) {
             Person person = sortedPeople[i];
             retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
@@ -127,6 +180,7 @@ public class PersonArray {
         }
 
         retMessage += String.format("%-20s %-4s %n", "Name", "Age");
+        retMessage += String.format("%-20s %-4s %n", "----", "---");
         retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
         retMessage += String.format("%nNumber of Comparisons: %d", numComparisons);
 
@@ -143,10 +197,20 @@ public class PersonArray {
         }
 
         retMessage += String.format("%-20s %-4s %n", "Name", "Age");
+        retMessage += String.format("%-20s %-4s %n", "----", "---");
         retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
         retMessage += String.format("%nNumber of Comparisons: %d", numComparisons);
 
         return retMessage;
+    }
+
+    public String getStatistics() {
+        int[] ages = new int[people.length];
+        for (int i=0; i<people.length; i++) {
+            ages[i] = people[i].getAge();
+        }
+        Statistics statistics = new Statistics(ages);
+        return statistics.getStatistics();
     }
 
     public boolean modify(String oldName, String newName, int newAge) {
