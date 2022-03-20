@@ -12,15 +12,18 @@ import static java.lang.System.exit;
 
 public class PeopleSearchGui extends GBFrame {
 
-    PersonArray personArray = new PersonArray();
+    private PersonArray personArray = new PersonArray();
 
     //Main panel
     private GBPanel mainPanel;
 
     // menus
     private JMenuItem addNewPersonMenu;
-    private JMenuItem showAllPeopleNameMenu;
-    private JMenuItem showAllPeopleAgeMenu;
+    private JMenuItem showAllPeopleUnsortedMenu;
+    private JMenuItem showAllPeopleNameIncrMenu;
+    private JMenuItem showAllPeopleAgeIncrMenu;
+    private JMenuItem showAllPeopleNameDecrMenu;
+    private JMenuItem showAllPeopleAgeDecrMenu;
     private JMenuItem searchByNameSequentialMenu;
     private JMenuItem searchByNameBinaryMenu;
     private JMenuItem showAgeStatistics;
@@ -39,7 +42,7 @@ public class PeopleSearchGui extends GBFrame {
     private JButton deleteBtn;
     private JButton saveBtn;
 
-    final int MAX_PERSONS = 20;
+    private final int MAX_PERSONS = 20;
 
     public PeopleSearchGui() {
 
@@ -49,8 +52,11 @@ public class PeopleSearchGui extends GBFrame {
 
         //add menu items
         addNewPersonMenu = addMenuItem("People", "Add Person");
-        showAllPeopleNameMenu = addMenuItem("People", "Show all People ordered by Name");
-        showAllPeopleAgeMenu = addMenuItem("People", "Show all People ordered by Age");
+        showAllPeopleUnsortedMenu = addMenuItem("People", "Show all People unsorted");
+        showAllPeopleNameIncrMenu = addMenuItem("People", "Show all People sorted by Name [A-Z]");
+        showAllPeopleNameDecrMenu = addMenuItem("People", "Show all People sorted by Name [Z-A]");
+        showAllPeopleAgeIncrMenu = addMenuItem("People", "Show all People sorted by Age [0-100]");
+        showAllPeopleAgeDecrMenu = addMenuItem("People", "Show all People sorted by Age [100-0]");
         searchByNameSequentialMenu = addMenuItem("People", "Search Sequential");
         searchByNameBinaryMenu = addMenuItem("People", "Search Binary");
         showAgeStatistics = addMenuItem("People", "Show Age Statistics");
@@ -82,7 +88,7 @@ public class PeopleSearchGui extends GBFrame {
         personArray.addPerson("Fred", 55);
         personArray.addPerson("Kate", 28);
         personArray.addPerson("Liam", 35);
-        personArray.addPerson("BOB", 17);
+        personArray.addPerson("Bobby", 17);
     }
 
     //show general info screen
@@ -130,11 +136,23 @@ public class PeopleSearchGui extends GBFrame {
         revalidate();
     }
 
-    //show all people by name
-    void createShowAllPeopleNameScreen() {
+    //show all people unsorted
+    void createShowAllPeopleUnsortedScreen() {
         this.setSize(500,80+16*personArray.getNumPeople());
         JTextArea infoField = mainPanel.addTextArea(
-                personArray.getAllPeopleSortedByName(),
+                personArray.getAllPeopleUnsorted(),
+                1, 1, 1, 1);
+        infoField.setEditable(false);
+        Font font = new Font("Courier", Font.BOLD,14);
+        infoField.setFont(font);
+        revalidate();
+    }
+
+    //show all people by name
+    void createShowAllPeopleNameScreen(boolean increasing) {
+        this.setSize(500,80+16*personArray.getNumPeople());
+        JTextArea infoField = mainPanel.addTextArea(
+                personArray.getAllPeopleSortedByName(increasing),
                 1, 1, 1, 1);
         infoField.setEditable(false);
         Font font = new Font("Courier", Font.BOLD,14);
@@ -143,10 +161,10 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     //show all people by age
-    void createShowAllPeopleAgeScreen() {
+    void createShowAllPeopleAgeScreen(boolean increasing) {
         this.setSize(500,80+16*personArray.getNumPeople());
         JTextArea infoField = mainPanel.addTextArea(
-                personArray.getAllPeopleSortedByAge(),
+                personArray.getAllPeopleSortedByAge(increasing),
                 1, 1, 1, 1);
         infoField.setEditable(false);
         Font font = new Font("Courier", Font.BOLD,14);
@@ -196,14 +214,14 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     private void showSequentialSearchResults(){
-        this.setSize(500,150);
+        this.setSize(500,200);
         JTextArea infoField = mainPanel.addTextArea(
                 personArray.getAllSequentialSortResults(nameSearchField.getText()),
                 1,1,2,1);
         infoField.setEditable(false);
         Font font = new Font("Courier", Font.BOLD,14);
         infoField.setFont(font);
-        if ( personArray.sequentialSearch(nameSearchField.getText()) != null ) {
+        if ( personArray.binarySearch(nameSearchField.getText()) != null ) {
             editBtn = mainPanel.addButton("Edit", 2, 1, 1, 1);
             deleteBtn = mainPanel.addButton("Delete", 2, 2, 1, 1);
         }
@@ -220,7 +238,7 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     private void showBinarySearchResults(){
-        this.setSize(500,150);
+        this.setSize(500,200);
         JTextArea infoField = mainPanel.addTextArea(
                 personArray.getAllBinarySortResults(nameSearchField.getText()),
                 1,1,2,1);
@@ -314,16 +332,22 @@ public class PeopleSearchGui extends GBFrame {
     public void menuItemSelected(JMenuItem menuItem) {
         resetScreen();
         if (menuItem == addNewPersonMenu) {
-            if ( personArray.getNumPeople() >= MAX_PERSONS ) {
-                showMessageBox("You have reached the limit of maximum "+MAX_PERSONS+" people.");
+            if (personArray.getNumPeople() >= MAX_PERSONS) {
+                showMessageBox("You have reached the limit of maximum " + MAX_PERSONS + " people.");
                 createInfoScreen();
             } else {
                 createAddNewPersonScreen();
             }
-        } else if (menuItem == showAllPeopleNameMenu) {
-            createShowAllPeopleNameScreen();
-        } else if (menuItem == showAllPeopleAgeMenu) {
-            createShowAllPeopleAgeScreen();
+        } else if (menuItem == showAllPeopleUnsortedMenu) {
+            createShowAllPeopleUnsortedScreen();
+        } else if (menuItem == showAllPeopleNameIncrMenu) {
+            createShowAllPeopleNameScreen(true);
+        } else if (menuItem == showAllPeopleNameDecrMenu) {
+            createShowAllPeopleNameScreen(false);
+        } else if (menuItem == showAllPeopleAgeIncrMenu) {
+            createShowAllPeopleAgeScreen(true);
+        } else if (menuItem == showAllPeopleAgeDecrMenu) {
+            createShowAllPeopleAgeScreen(false);
         }  else if (menuItem == searchByNameSequentialMenu) {
             createSearchByNameSequentialScreen();
         }  else if (menuItem == searchByNameBinaryMenu) {

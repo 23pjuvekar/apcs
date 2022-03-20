@@ -26,7 +26,7 @@ public class PersonArray {
         return people.length;
     }
 
-    private Person[] selectionSortByName() {
+    private Person[] selectionSortByName(boolean increasing) {
 
         // copy persons into new array to sort
         Person[] sortedPeople = new Person[people.length];
@@ -45,8 +45,14 @@ public class PersonArray {
             // Find the minimum element in unsorted array
             int min_idx = i;
             for (int j = i+1; j < n; j++){
-                if (sortedPeople[j].getName().compareToIgnoreCase(sortedPeople[min_idx].getName()) < 0) {
-                    min_idx = j;
+                if ( increasing ) {
+                    if (sortedPeople[j].getName().compareToIgnoreCase(sortedPeople[min_idx].getName()) < 0) {
+                        min_idx = j;
+                    }
+                } else {
+                    if (sortedPeople[j].getName().compareToIgnoreCase(sortedPeople[min_idx].getName()) > 0) {
+                        min_idx = j;
+                    }
                 }
             }
             // Swap the found minimum element with the first element
@@ -58,7 +64,7 @@ public class PersonArray {
         return sortedPeople;
     }
 
-    private Person[] selectionSortByAge() {
+    private Person[] selectionSortByAge(boolean increasing) {
 
         // copy persons into new array to sort
         Person[] sortedPeople = new Person[people.length];
@@ -77,8 +83,14 @@ public class PersonArray {
             // Find the minimum element in unsorted array
             int min_idx = i;
             for (int j = i+1; j < n; j++){
-                if (sortedPeople[j].getAge() < sortedPeople[min_idx].getAge()) {
-                    min_idx = j;
+                if ( increasing ) {
+                    if (sortedPeople[j].getAge() < sortedPeople[min_idx].getAge()) {
+                        min_idx = j;
+                    }
+                } else {
+                    if (sortedPeople[j].getAge() > sortedPeople[min_idx].getAge()) {
+                        min_idx = j;
+                    }
                 }
             }
             // Swap the found minimum element with the first element
@@ -111,7 +123,7 @@ public class PersonArray {
         }
 
         // get sorted list for binary search
-        Person[] sortedPeople = selectionSortByName();
+        Person[] sortedPeople = selectionSortByName(true);
 
         // do the binary search
         int low = 0, high = sortedPeople.length-1;
@@ -130,7 +142,7 @@ public class PersonArray {
         return null; // not found
     }
 
-    public String getAllPeopleSortedByName() {
+    public String getAllPeopleUnsorted() {
 
         String retMessage = "";
 
@@ -141,7 +153,26 @@ public class PersonArray {
 
         retMessage += String.format("%-20s %-4s %n", "Name", "Age");
         retMessage += String.format("%-20s %-4s %n", "----", "---");
-        Person[] sortedPeople = selectionSortByName();
+        for (int i = 0; i < people.length; i++) {
+            Person person = people[i];
+            retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
+        }
+
+        return retMessage;
+    }
+
+    public String getAllPeopleSortedByName(boolean increasing) {
+
+        String retMessage = "";
+
+        if (getNumPeople() == 0) {
+            retMessage = "There are currently no people in the system.";
+            return retMessage;
+        }
+
+        retMessage += String.format("%-20s %-4s %n", "Name", "Age");
+        retMessage += String.format("%-20s %-4s %n", "----", "---");
+        Person[] sortedPeople = selectionSortByName(increasing);
         for (int i = 0; i < sortedPeople.length; i++) {
             Person person = sortedPeople[i];
             retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
@@ -150,7 +181,7 @@ public class PersonArray {
         return retMessage;
     }
 
-    public String getAllPeopleSortedByAge() {
+    public String getAllPeopleSortedByAge(boolean increasing) {
 
         String retMessage = "";
 
@@ -161,7 +192,7 @@ public class PersonArray {
 
         retMessage += String.format("%-20s %-4s %n", "Name", "Age");
         retMessage += String.format("%-20s %-4s %n", "----", "---");
-        Person[] sortedPeople = selectionSortByAge();
+        Person[] sortedPeople = selectionSortByAge(increasing);
         for (int i = 0; i < sortedPeople.length; i++) {
             Person person = sortedPeople[i];
             retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
@@ -179,6 +210,7 @@ public class PersonArray {
             return retMessage = "There is no person with the name " + name;
         }
 
+        retMessage += String.format("%s %n%n", "Sequential Search Results");
         retMessage += String.format("%-20s %-4s %n", "Name", "Age");
         retMessage += String.format("%-20s %-4s %n", "----", "---");
         retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
@@ -196,6 +228,7 @@ public class PersonArray {
             return retMessage = "There is no person with the name " + name;
         }
 
+        retMessage += String.format("%s %n%n", "Binary Search Results");
         retMessage += String.format("%-20s %-4s %n", "Name", "Age");
         retMessage += String.format("%-20s %-4s %n", "----", "---");
         retMessage += String.format("%-20s %-4d %n", person.getName(), person.getAge());
