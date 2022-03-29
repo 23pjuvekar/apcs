@@ -67,7 +67,7 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     //create test data
-    public void createTestData() {
+    private void createTestData() {
         personArray = new PersonArray(); // reset all persons
         personArray.addPerson("Tom", 44);
         personArray.addPerson("Tim", 38);
@@ -92,7 +92,7 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     //show general info screen
-    public void createInfoScreen() {
+    private void createInfoScreen() {
         this.setSize(500,200);
         String msg = "\nThere are currently "+personArray.getNumPeople()+" people in the system.\n\nChoose an operation from the dropdown menu.";
         JTextArea infoField = mainPanel.addTextArea(msg, 1, 1, 1, 1);
@@ -103,7 +103,7 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     //add new person
-    void createAddNewPersonScreen() {
+    private void createAddNewPersonScreen() {
         this.setSize(500,150);
 
         mainPanel.addLabel("Name", 1, 1, 1, 1);
@@ -119,7 +119,7 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     //edit person
-    void createEditPersonScreen() {
+    private void createEditPersonScreen() {
         this.setSize(500,150);
 
         Person person = personArray.sequentialSearch(nameSearchField.getText());
@@ -137,7 +137,7 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     //show all people unsorted
-    void createShowAllPeopleUnsortedScreen() {
+    private void createShowAllPeopleUnsortedScreen() {
         this.setSize(500,80+16*personArray.getNumPeople());
         JTextArea infoField = mainPanel.addTextArea(
                 personArray.getAllPeopleUnsorted(),
@@ -149,7 +149,7 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     //show all people by name
-    void createShowAllPeopleNameScreen(boolean increasing) {
+    private void createShowAllPeopleNameScreen(boolean increasing) {
         this.setSize(500,80+16*personArray.getNumPeople());
         JTextArea infoField = mainPanel.addTextArea(
                 personArray.getAllPeopleSortedByName(increasing),
@@ -161,7 +161,7 @@ public class PeopleSearchGui extends GBFrame {
     }
 
     //show all people by age
-    void createShowAllPeopleAgeScreen(boolean increasing) {
+    private void createShowAllPeopleAgeScreen(boolean increasing) {
         this.setSize(500,80+16*personArray.getNumPeople());
         JTextArea infoField = mainPanel.addTextArea(
                 personArray.getAllPeopleSortedByAge(increasing),
