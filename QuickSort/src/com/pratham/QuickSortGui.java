@@ -157,17 +157,6 @@ public class QuickSortGui extends GBFrame {
         }
     }
 
-    private String printMarker(String list, int pos) {
-        String marker = "";
-        String[] numbersStrArray = list.split(",");
-        int len = 1;
-        for ( int i=0; i<pos; i++ ) {
-            len += numbersStrArray[i].trim().length();
-            len += 2; // for comma+space
-        }
-        return String.format("%"+len+"s","^");
-    }
-
     //Method for button clicks
     public void buttonClicked(JButton buttonObj) {
         if (buttonObj == addNumbersOkButton) {
